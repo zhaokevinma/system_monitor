@@ -110,7 +110,34 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+vector<string> LinuxParser::CpuUtilization() { 
+  vector<string> cpuValues{};
+  string line;
+  string key;
+  string vuser, vnice, vsystem, vidle, viowait, virq, vsoftirq, vsteal, vguest, vguest_nice;
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key >> vuser >> vnice >> vsystem >> vidle >> viowait >> virq >> vsoftirq >> vsteal >> vguest >> vguest_nice) {
+        if (key == "cpu") {
+          cpuValues.push_back(vuser);
+          cpuValues.push_back(vnice);
+          cpuValues.push_back(vsystem);
+          cpuValues.push_back(vidle);
+          cpuValues.push_back(viowait);
+          cpuValues.push_back(virq);
+          cpuValues.push_back(vsoftirq);
+          cpuValues.push_back(vsteal);
+          cpuValues.push_back(vguest);
+          cpuValues.push_back(vguest_nice);
+          return cpuValues;
+        }
+      }
+    }
+  }
+  return {}; 
+}
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { 
