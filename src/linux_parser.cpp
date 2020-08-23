@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "linux_parser.h"
-#include "parser_consts.h"
-#include "parser_helper.h"
+#include "linux_consts.h"
+#include "linux_helper.h"
 
 using std::stof;
 using std::string;
@@ -15,7 +15,7 @@ using std::vector;
 // Get Operating Systsem information by reading data from the filesystem
 string LinuxParser::OperatingSystem() {
   string line, key, value;
-  std::ifstream filestream(ParserConsts::kOSPath);
+  std::ifstream filestream(LinuxConsts::kOSPath);
   if (filestream.is_open()) {
     // This is a muti-line file and a while loop keeps reading in lines
     while (std::getline(filestream, line)) {
@@ -40,8 +40,8 @@ string LinuxParser::OperatingSystem() {
 string LinuxParser::Kernel() {
   string os, version, kernel;
   string line;
-  std::ifstream stream(ParserConsts::kProcDirectory +
-                       ParserConsts::kVersionFilename);
+  std::ifstream stream(LinuxConsts::kProcDirectory +
+                       LinuxConsts::kVersionFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
@@ -53,7 +53,7 @@ string LinuxParser::Kernel() {
 // Get Pid information
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
-  DIR* directory = opendir(ParserConsts::kProcDirectory.c_str());
+  DIR* directory = opendir(LinuxConsts::kProcDirectory.c_str());
   struct dirent* file;
   while ((file = readdir(directory)) != nullptr) {
     // Is this a directory?
@@ -72,10 +72,10 @@ vector<int> LinuxParser::Pids() {
 
 // Get Memory information
 float LinuxParser::MemoryUtilization() {
-  float memTotal = ParserHelper::GetValueByKey<int>(
-      ParserConsts::filterMemTotalString, ParserConsts::kMeminfoFilename);
-  float memFree = ParserHelper::GetValueByKey<int>(
-      ParserConsts::filterMemFreeString, ParserConsts::kMeminfoFilename);
+  float memTotal = LinuxHelper::GetValueByKey<int>(
+      LinuxConsts::filterMemTotalString, LinuxConsts::kMeminfoFilename);
+  float memFree = LinuxHelper::GetValueByKey<int>(
+      LinuxConsts::filterMemFreeString, LinuxConsts::kMeminfoFilename);
   float memory = (memTotal - memFree) / memTotal;
   return memory;
 }
@@ -83,27 +83,27 @@ float LinuxParser::MemoryUtilization() {
 // Get Up-time information
 long LinuxParser::UpTime() {
   string line;
-  long upTime = ParserHelper::GetValue<long>(ParserConsts::kUptimeFilename);
+  long upTime = LinuxHelper::GetValue<long>(LinuxConsts::kUptimeFilename);
   return upTime;
 }
 
 // Get the total number of processes
 int LinuxParser::TotalProcesses() {
-  return ParserHelper::GetValueByKey<int>(ParserConsts::filterProcesses,
-                                          ParserConsts::kStatFilename);
+  return LinuxHelper::GetValueByKey<int>(LinuxConsts::filterProcesses,
+                                          LinuxConsts::kStatFilename);
 }
 
 // Get actively running processes
 int LinuxParser::RunningProcesses() {
-  return ParserHelper::GetValueByKey<int>(ParserConsts::filterRunningProcesses,
-                                          ParserConsts::kStatFilename);
+  return LinuxHelper::GetValueByKey<int>(LinuxConsts::filterRunningProcesses,
+                                          LinuxConsts::kStatFilename);
 }
 
 // Get user information by UID
 string LinuxParser::UserByUID(int UID) {
   string line, user, x;
   int fileUid;
-  std::ifstream filestream(ParserConsts::kPasswordPath);
+  std::ifstream filestream(LinuxConsts::kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
