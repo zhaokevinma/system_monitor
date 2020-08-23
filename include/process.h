@@ -12,6 +12,16 @@ Basic class for Process representation
 It contains relevant attributes as shown below
 */
 class Process {
+ public:
+  Process(int, long);
+  int Pid();
+  string User();
+  string Command();
+  double CpuUtilization();
+  float RawRam();
+  string Ram();
+  long int UpTime();
+
  private:
   int pid_;
   long Hertz_;
@@ -22,16 +32,6 @@ class Process {
   float starttime_ = 0.0;
 
   vector<string> ReadFile(int);
-
- public:
-  Process(int, long);
-  int Pid();
-  string User();
-  string Command();
-  double CpuUtilization();
-  float RawRam();
-  string Ram();
-  long int UpTime();
 };
 
 #endif

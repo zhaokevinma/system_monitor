@@ -1,11 +1,11 @@
-#ifndef SYSTEM_PARSER_H
-#define SYSTEM_PARSER_H
+#ifndef LINUX_PARSER_H
+#define LINUX_PARSER_H
 
 #include <fstream>
 #include <regex>
 #include <string>
 
-#include "parser_helper.h"
+#include "linux_helper.h"
 
 using std::string;
 using std::vector;

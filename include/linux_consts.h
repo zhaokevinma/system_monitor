@@ -1,11 +1,11 @@
-#ifndef CONSTS_PARSER_H
-#define CONSTS_PARSER_H
+#ifndef LINUX_CONSTS_H
+#define LINUX_CONSTS_H
 
 #include <string>
 
 using std::string;
 
-namespace ParserConsts {
+namespace LinuxConsts {
 const string kProcDirectory{"/proc/"};
 const string kCmdlineFilename{"/cmdline"};
 const string kCpuinfoFilename{"/cpuinfo"};
@@ -25,6 +25,6 @@ const string filterCpu("cpu");
 const string filterUID("Uid:");
 const string filterProcMem("VmData:");
 
-}  // namespace ParserConsts
+}  // namespace LinuxConsts
 
 #endif
