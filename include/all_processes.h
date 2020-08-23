@@ -10,6 +10,10 @@ using std::string;
 using std::vector;
 
 class All_Processes {
+ public:
+  All_Processes();
+  vector<Process>& GetProcesses();
+  
  private:
   long Hertz;
   vector<int> current_pids_;
@@ -19,10 +23,6 @@ class All_Processes {
   void AddNewProcesses(bool&);
   vector<int> ReadFolders();
   void RemoveFinishedProcesses(bool&);
-
- public:
-  All_Processes();
-  vector<Process>& GetProcesses();
 };
 
 #endif

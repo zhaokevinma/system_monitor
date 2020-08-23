@@ -24,7 +24,6 @@ const string filterMemFreeString("MemFree:");
 const string filterCpu("cpu");
 const string filterUID("Uid:");
 const string filterProcMem("VmData:");
-
 }  // namespace LinuxConsts
 
 #endif

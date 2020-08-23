@@ -7,10 +7,6 @@
 using std::string;
 using std::vector;
 
-/*
-Basic class for Process representation
-It contains relevant attributes as shown below
-*/
 class Process {
  public:
   Process(int, long);
