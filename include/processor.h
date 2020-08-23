@@ -8,16 +8,21 @@ using std::string;
 using std::vector;
 
 class Processor {
- public:
- float Utilization();  // TODO: See src/processor.cpp
-
-  Processor();
-
-  // TODO: Declare any necessary private members
  private:
-  float prevTotalCpuTime;
-  float prevIdleCpuTime;
-  vector<long> convertToLong(vector<string> values); 
+  int previdle;
+  int previowait;
+  int prevuser;
+  int prevnice;
+  int prevsystem;
+  int previrq;
+  int prevsoftirq;
+  int prevsteal;
+
+  void AssignPrevValues(vector<double>);
+  vector<double> ReadFile();
+
+ public:
+  double Utilization();
 };
 
 #endif

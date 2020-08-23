@@ -1,38 +1,73 @@
 #include "processor.h"
-#include "linux_parser.h"
-
+#include <sstream>
 #include <string>
 #include <vector>
+
+#include "parser_consts.h"
+#include "parser_helper.h"
 
 using std::string;
 using std::vector;
 
-Processor::Processor() : prevTotalCpuTime(0.0), prevIdleCpuTime(0.0){};
+double Processor::Utilization() {
+  vector<double> values = ReadFile();
+  double user = values[0];
+  double nice = values[1];
+  double system = values[2];
+  double idle = values[3];
+  double iowait = values[4];
+  double irq = values[5];
+  double softirq = values[6];
+  double steal = values[7];
 
-// TODO: Return the aggregate CPU utilization
-float Processor::Utilization() {
-    vector<long> cpuValues = convertToLong(LinuxParser::CpuUtilization());
-    float totalCpuTime = cpuValues[LinuxParser::kUser_] + cpuValues[LinuxParser::kNice_] +
-     cpuValues[LinuxParser::kSystem_] + cpuValues[LinuxParser::kIdle_] +
-     cpuValues[LinuxParser::kIOwait_] + cpuValues[LinuxParser::kIRQ_] + 
-     cpuValues[LinuxParser::kSoftIRQ_] + cpuValues[LinuxParser::kSteal_];
-    float idleCpuTime = cpuValues[LinuxParser::kIdle_] + cpuValues[LinuxParser::kIOwait_];
+  double PrevIdle = previdle + previowait;
+  double Idle = idle + iowait;
 
-    float diffIdle = idleCpuTime - prevIdleCpuTime;
-    float diffTotal = idleCpuTime - prevTotalCpuTime;
-    float diffUsage = (diffTotal - diffTotal) / diffTotal;
+  double PrevNonIdle =
+      prevuser + prevnice + prevsystem + previrq + prevsoftirq + prevsteal;
+  double NonIdle = user + nice + system + irq + softirq + steal;
 
-    prevIdleCpuTime = idleCpuTime;
-    prevTotalCpuTime = totalCpuTime;
-    
-    return diffUsage; 
+  double PrevTotal = PrevIdle + PrevNonIdle;
+  double Total = Idle + NonIdle;
+
+  double totald = Total - PrevTotal;
+
+  double idled = Idle - PrevIdle;
+
+  double CPU_Percentage = (totald - idled) / totald;
+
+  AssignPrevValues(values);
+  return CPU_Percentage;
 }
 
-vector<long> Processor::convertToLong(vector<string> values) {
-    vector<long> convertedValues{};
+void Processor::AssignPrevValues(vector<double> newValues) {
+  prevuser = newValues[0];
+  prevnice = newValues[1];
+  prevsystem = newValues[2];
+  previdle = newValues[3];
+  previowait = newValues[4];
+  previrq = newValues[5];
+  prevsoftirq = newValues[6];
+  prevsteal = newValues[7];
+}
 
-    for (int it = 0; it < (int)values.size(); it++) {
-        convertedValues.push_back(std::stol(values[it]));
+vector<double> Processor::ReadFile() {
+  string line, key;
+  double value;
+  vector<double> cpuNumbers;
+  std::ifstream stream(ParserConsts::kProcDirectory +
+                       ParserConsts::kStatFilename);
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key) {
+        if (key == ParserConsts::filterCpu) {
+          while (linestream >> value) {
+            cpuNumbers.emplace_back(value);
+          }
+        }
+      }
     }
-    return convertedValues;
+  }
+  return cpuNumbers;
 }
