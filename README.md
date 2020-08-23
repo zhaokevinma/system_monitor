@@ -2,10 +2,6 @@
 
 ![System Monitor](images/monitor.png)
 
-
-## Project for Udacity C++ Nanodegree
-The system monitor shows you what’s happening the computer: processes, id, CPU and memory usage. In this project, I wrote object-oriented C++ to build a Linux system monitor similar to the widely used htop application.
-
 ## ncurses
 [ncurses](https://www.gnu.org/software/ncurses/) is a library that facilitates text-based graphical output in the terminal. This project relies on ncurses for display output.
 
