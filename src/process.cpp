@@ -49,7 +49,7 @@ string Process::Command() {
 
 float Process::RawRam() {
   float memInKB = LinuxHelper::GetValueByKey<float>(
-      ParserConsts::filterProcMem,
+      LinuxConsts::filterProcMem,
       to_string(pid_) + LinuxConsts::kStatusFilename);
   return memInKB;
 }
